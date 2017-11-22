@@ -47,6 +47,16 @@ var Main = React.createClass({
     this.setState({currentViewState : currentViewState + 1});
   },
 
+
+  goToPreviousView() {
+    var currentViewState = this.state.currentViewState;
+    if(currentViewState === ViewState.START) {
+      this.setState({currentViewState : ViewState.START});
+      return;
+    }
+    this.setState({currentViewState : currentViewState - 1});
+  },
+
   goToStartView() {
 	  this.setState({currentViewState : ViewState.START});
   },
@@ -63,11 +73,11 @@ var Main = React.createClass({
       case ViewState.CAPITAL_AMOUNT_QUESTION:
         return <CapitalAmountQuestion goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
        case ViewState.RISK_QUESTION:
-        return <RiskProfileQuestion goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
+        return <RiskProfileQuestion goToPreviousView={this.goToPreviousView} goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
        case ViewState.INVESTMENT_ENTITY_TYPE_QUESTION:
-        return <InvestmentEntityTypeQuestion goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
+        return <InvestmentEntityTypeQuestion goToPreviousView={this.goToPreviousView} goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
        case ViewState.REMAINING_CAPITAL_GAINS_AMOUNT_QUESTION:
-        return <RemainingCapitalGainsAmountQuestion goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
+        return <RemainingCapitalGainsAmountQuestion goToPreviousView={this.goToPreviousView} goToNextView={this.goToNextView} updateQuestionAnswer={this.updateQuestionAnswer}/>;
        case ViewState.SUMMARY:
         return <Summary goToStartView={this.goToStartView} data={this.state.questionAnswers}/>;
        case ViewState.TEST:
@@ -219,6 +229,10 @@ var RemainingCapitalGainsAmountQuestion = React.createClass({
     this.props.goToNextView();
   },
 
+  handleGoPrevious(){
+    this.props.goToPreviousView();
+  },
+
   render() {
     return (
     <div>
@@ -233,6 +247,7 @@ var RemainingCapitalGainsAmountQuestion = React.createClass({
           <br/>
         </div>
         <div className='row text-center'>
+          <button type='button' className='btn btn-primary' onClick={this.handleGoPrevious}>Previous Question</button>
           <button type='button' className='btn btn-primary' onClick={this.handleSubmit}>Next Question</button>
         </div>
       </div>
@@ -254,6 +269,10 @@ var InvestmentEntityTypeQuestion = React.createClass({
   handleSubmit() {
     this.props.updateQuestionAnswer({investmentEntityType:this.state.investmentEntityType});
     this.props.goToNextView();
+  },
+
+  handleGoPrevious(){
+    this.props.goToPreviousView();
   },
 
   render() {
@@ -303,6 +322,7 @@ var InvestmentEntityTypeQuestion = React.createClass({
           <br/>
         </div>
         <div className='row text-center'>
+          <button type='button' className='btn btn-primary' onClick={this.handleGoPrevious}>Previous Question</button>
           <button type='button' className='btn btn-primary' onClick={this.handleSubmit}>Next Question</button>
         </div>
       </div>
@@ -324,6 +344,10 @@ var RiskProfileQuestion = React.createClass({
   handleSubmit() {
     this.props.updateQuestionAnswer({riskProfile:this.state.riskProfile});
     this.props.goToNextView();
+  },
+
+  handleGoPrevious(){
+      this.props.goToPreviousView();
   },
 
   render() {
@@ -355,6 +379,7 @@ var RiskProfileQuestion = React.createClass({
           <br/>
         </div>
         <div className='row text-center'>
+          <button type='button' className='btn btn-primary' onClick={this.handleGoPrevious}>Previous Question</button>
           <button type='button' className='btn btn-primary' onClick={this.handleSubmit}>Next Question</button>
         </div>
       </div>

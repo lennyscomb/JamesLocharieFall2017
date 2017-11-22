@@ -47,11 +47,19 @@ var Main = React.createClass({
     }
     this.setState({ currentViewState: currentViewState + 1 });
   },
+  goToPreviousView: function goToPreviousView() {
+    var currentViewState = this.state.currentViewState;
+    if (currentViewState === ViewState.START) {
+      this.setState({ currentViewState: ViewState.START });
+      return;
+    }
+    this.setState({ currentViewState: currentViewState - 1 });
+  },
   goToStartView: function goToStartView() {
     this.setState({ currentViewState: ViewState.START });
   },
   updateQuestionAnswer: function updateQuestionAnswer(questionAnswer) {
-    newQuestionAnswers = Object.assign({}, this.state.questionAnswers, questionAnswer);
+    var newQuestionAnswers = Object.assign({}, this.state.questionAnswers, questionAnswer);
     this.setState({ questionAnswers: newQuestionAnswers });
   },
   render: function render() {
@@ -61,11 +69,11 @@ var Main = React.createClass({
       case ViewState.CAPITAL_AMOUNT_QUESTION:
         return React.createElement(CapitalAmountQuestion, { goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
       case ViewState.RISK_QUESTION:
-        return React.createElement(RiskProfileQuestion, { goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
+        return React.createElement(RiskProfileQuestion, { goToPreviousView: this.goToPreviousView, goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
       case ViewState.INVESTMENT_ENTITY_TYPE_QUESTION:
-        return React.createElement(InvestmentEntityTypeQuestion, { goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
+        return React.createElement(InvestmentEntityTypeQuestion, { goToPreviousView: this.goToPreviousView, goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
       case ViewState.REMAINING_CAPITAL_GAINS_AMOUNT_QUESTION:
-        return React.createElement(RemainingCapitalGainsAmountQuestion, { goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
+        return React.createElement(RemainingCapitalGainsAmountQuestion, { goToPreviousView: this.goToPreviousView, goToNextView: this.goToNextView, updateQuestionAnswer: this.updateQuestionAnswer });
       case ViewState.SUMMARY:
         return React.createElement(Summary, { goToStartView: this.goToStartView, data: this.state.questionAnswers });
       case ViewState.TEST:
@@ -278,6 +286,9 @@ var RemainingCapitalGainsAmountQuestion = React.createClass({
     this.props.updateQuestionAnswer({ remainingCapitalGainsAmount: this.state.remainingCapitalGainsAmount });
     this.props.goToNextView();
   },
+  handleGoPrevious: function handleGoPrevious() {
+    this.props.goToPreviousView();
+  },
   render: function render() {
     return React.createElement(
       'div',
@@ -306,6 +317,11 @@ var RemainingCapitalGainsAmountQuestion = React.createClass({
           { className: 'row text-center' },
           React.createElement(
             'button',
+            { type: 'button', className: 'btn btn-primary', onClick: this.handleGoPrevious },
+            'Previous Question'
+          ),
+          React.createElement(
+            'button',
             { type: 'button', className: 'btn btn-primary', onClick: this.handleSubmit },
             'Next Question'
           )
@@ -326,6 +342,9 @@ var InvestmentEntityTypeQuestion = React.createClass({
   handleSubmit: function handleSubmit() {
     this.props.updateQuestionAnswer({ investmentEntityType: this.state.investmentEntityType });
     this.props.goToNextView();
+  },
+  handleGoPrevious: function handleGoPrevious() {
+    this.props.goToPreviousView();
   },
   render: function render() {
     return React.createElement(
@@ -401,6 +420,11 @@ var InvestmentEntityTypeQuestion = React.createClass({
           { className: 'row text-center' },
           React.createElement(
             'button',
+            { type: 'button', className: 'btn btn-primary', onClick: this.handleGoPrevious },
+            'Previous Question'
+          ),
+          React.createElement(
+            'button',
             { type: 'button', className: 'btn btn-primary', onClick: this.handleSubmit },
             'Next Question'
           )
@@ -421,6 +445,9 @@ var RiskProfileQuestion = React.createClass({
   handleSubmit: function handleSubmit() {
     this.props.updateQuestionAnswer({ riskProfile: this.state.riskProfile });
     this.props.goToNextView();
+  },
+  handleGoPrevious: function handleGoPrevious() {
+    this.props.goToPreviousView();
   },
   render: function render() {
     return React.createElement(
@@ -468,6 +495,11 @@ var RiskProfileQuestion = React.createClass({
         React.createElement(
           'div',
           { className: 'row text-center' },
+          React.createElement(
+            'button',
+            { type: 'button', className: 'btn btn-primary', onClick: this.handleGoPrevious },
+            'Previous Question'
+          ),
           React.createElement(
             'button',
             { type: 'button', className: 'btn btn-primary', onClick: this.handleSubmit },
